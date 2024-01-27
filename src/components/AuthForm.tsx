@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { Input } from './ui/input'
-import { Button, buttonVariants } from './ui/button'
+import { Button } from './ui/button'
 import { signIn, useSession } from 'next-auth/react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
@@ -16,7 +16,7 @@ const AuthForm = () => {
 
   useEffect(() => {
     if (session?.status === 'authenticated') {
-      router.push('/users')
+      router.push('/dashboard')
     }
   }, [session?.status, router])
 
@@ -55,7 +55,7 @@ const AuthForm = () => {
 
     if (variant === 'REGISTER') {
       axios
-        .post('/api/register', data)
+        .post('/api/accounts', data)
         .then(() => signIn('credentials', data))
         .catch(() => console.log('Something went wrong!'))
     }
@@ -69,8 +69,14 @@ const AuthForm = () => {
       >
         {variant === 'REGISTER' && (
           <>
-            <Input type="text" placeholder="Name" name="name" />
             <Input
+              {...register('name')}
+              type="text"
+              placeholder="Name"
+              name="name"
+            />
+            <Input
+              {...register('balance')}
               type="text"
               placeholder="Balance ($)"
               name="balance"
@@ -82,8 +88,18 @@ const AuthForm = () => {
             />
           </>
         )}
-        <Input type="text" placeholder="Email" name="email" />
-        <Input type="password" placeholder="Password" name="password" />
+        <Input
+          {...register('email')}
+          type="text"
+          placeholder="Email"
+          name="email"
+        />
+        <Input
+          {...register('password')}
+          type="password"
+          placeholder="Password"
+          name="password"
+        />
         <Button type="submit" size="default">
           {variant === 'LOGIN' ? 'Sign in' : 'Register'}
         </Button>
