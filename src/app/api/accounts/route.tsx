@@ -5,10 +5,10 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { name, balance, email, password } = body
+  const { name, email, password } = body
 
   console.log(body)
-  if (!name || !balance || !email || !password)
+  if (!name || !email || !password)
     return new NextResponse('Missing fields', { status: 400 })
 
   const hashedPassword = await bcrypt.hash(password, 12)
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   const user = await prisma.account.create({
     data: {
       name,
-      balance: Number(balance),
+      balance: 0,
       email,
       hashedPassword,
     },

@@ -75,17 +75,6 @@ const AuthForm = () => {
               placeholder="Name"
               name="name"
             />
-            <Input
-              {...register('balance', { required: true })}
-              type="text"
-              placeholder="Balance ($)"
-              name="balance"
-              onKeyDown={event => {
-                if (!/[0-9]/.test(event.key) && event.key !== 'Backspace') {
-                  event.preventDefault()
-                }
-              }}
-            />
           </>
         )}
         <Input
