@@ -1,27 +1,70 @@
 'use client'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import axios from 'axios'
 import { Input } from './ui/input'
-import { Button } from './ui/button'
+import { Button, buttonVariants } from './ui/button'
+import { signIn, useSession } from 'next-auth/react'
+import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
+import { useRouter } from 'next/navigation'
 
 type Variant = 'LOGIN' | 'REGISTER'
 
 const AuthForm = () => {
+  const session = useSession()
+  const router = useRouter()
   const [variant, setVariant] = useState<Variant>('LOGIN')
+
+  useEffect(() => {
+    if (session?.status === 'authenticated') {
+      router.push('/users')
+    }
+  }, [session?.status, router])
 
   const toggleVariant = useCallback(() => {
     if (variant === 'LOGIN') setVariant('REGISTER')
     if (variant === 'REGISTER') setVariant('LOGIN')
   }, [variant])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log('submit')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FieldValues>({
+    defaultValues: {
+      name: '',
+      balance: '',
+      email: '',
+      password: '',
+    },
+  })
+
+  const onSubmit: SubmitHandler<FieldValues> = data => {
+    if (variant === 'LOGIN') {
+      signIn('credentials', {
+        ...data,
+        redirect: false,
+      }).then(callback => {
+        if (callback?.error) {
+          console.log('Invalid credentials')
+        }
+        if (callback?.ok && !callback?.error) {
+          console.log('Logged in!')
+        }
+      })
+    }
+
+    if (variant === 'REGISTER') {
+      axios
+        .post('/api/register', data)
+        .then(() => signIn('credentials', data))
+        .catch(() => console.log('Something went wrong!'))
+    }
   }
 
   return (
     <div className="m-5 text-sm rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
       <form
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col space-y-4 rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
       >
         {variant === 'REGISTER' && (
