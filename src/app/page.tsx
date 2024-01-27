@@ -1,11 +1,12 @@
 import Image from 'next/image'
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
+import AuthForm from '@/components/AuthForm'
 
 export default function Home() {
   return (
-    <MaxWidthWrapper className="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center">
-      <div className="index-container sm:px-6 lg:px-8">
-        <div className="index-container--logo sm:mx-auto sm:w-full sm:max-w-md">
+    <MaxWidthWrapper className="flex flex-col items-center justify-center text-center">
+      <div className="index-container--logo flex flex-col justify-center sm:mx-auto sm:w-full sm:max-w-md">
+        <span className="mx-auto m-5">
           <Image
             alt="Logo"
             height="48"
@@ -13,8 +14,8 @@ export default function Home() {
             src="/images/logo.svg"
             priority
           />
-          <h2 className="index-container--title">Sign in</h2>
-        </div>
+        </span>
+        <AuthForm />
       </div>
     </MaxWidthWrapper>
   )
