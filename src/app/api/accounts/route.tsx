@@ -7,6 +7,7 @@ export async function POST(request: Request) {
   const body = await request.json()
   const { name, balance, email, password } = body
 
+  console.log(body)
   if (!name || !balance || !email || !password)
     return new NextResponse('Missing fields', { status: 400 })
 

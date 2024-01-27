@@ -26,7 +26,7 @@ const AuthForm = () => {
   }, [variant])
 
   const {
-    accounts,
+    register,
     handleSubmit,
     formState: { errors },
   } = useForm<FieldValues>({
@@ -70,13 +70,13 @@ const AuthForm = () => {
         {variant === 'REGISTER' && (
           <>
             <Input
-              {...accounts('name')}
+              {...register('name', { required: true })}
               type="text"
               placeholder="Name"
               name="name"
             />
             <Input
-              {...accounts('balance')}
+              {...register('balance', { required: true })}
               type="text"
               placeholder="Balance ($)"
               name="balance"
@@ -89,13 +89,13 @@ const AuthForm = () => {
           </>
         )}
         <Input
-          {...accounts('email')}
+          {...register('email', { required: true })}
           type="text"
           placeholder="Email"
           name="email"
         />
         <Input
-          {...accounts('password')}
+          {...register('password', { required: true })}
           type="password"
           placeholder="Password"
           name="password"
