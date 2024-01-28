@@ -39,7 +39,7 @@ const AuthForm = () => {
     },
   })
 
-  const onSubmit: SubmitHandler<FieldValues> = data => {
+  const onSubmit: SubmitHandler<FieldValues> = async data => {
     if (variant === 'LOGIN') {
       signIn('credentials', {
         ...data,
@@ -55,9 +55,10 @@ const AuthForm = () => {
     }
 
     if (variant === 'REGISTER') {
-      axios
-        .post('/api/accounts', data)
-        .then(() => signIn('credentials', data))
+      await axios
+        //.post('/api/accounts', data)
+        .post('https://mbank-backend.vercel.app/accounts', data)
+        //.then(() => signIn('credentials', data))
         .catch(() => toast.error('Something went wrong!'))
     }
   }
