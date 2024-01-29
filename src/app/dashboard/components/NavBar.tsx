@@ -12,7 +12,7 @@ import useUserStore from '@/store/userStore'
 
 const NavBar = () => {
   const router = useRouter()
-  const { user } = useUserStore()
+  const { user, updateBalance } = useUserStore()
 
   const handleDebit = (amount: number) => {
     const data = {
@@ -23,6 +23,7 @@ const NavBar = () => {
     axios
       .post('/api/transactions', data)
       .catch(() => toast.error('Something went wrong!'))
+      .then(() => fetchBalance())
       .finally(() => toast.success('Debit Successful!'))
   }
 
@@ -35,7 +36,14 @@ const NavBar = () => {
     axios
       .post('/api/transactions', data)
       .catch(() => toast.error('Something went wrong!'))
+      .then(() => fetchBalance())
       .finally(() => toast.success('Withdrawal Successful!'))
+  }
+
+  const fetchBalance = () => {
+    axios
+      .get(`/api/accounts/${user?.id}/balance`)
+      .then(res => updateBalance(res.data.balance))
   }
 
   return (
