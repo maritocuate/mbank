@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import './popup.css'
 
@@ -5,10 +6,22 @@ interface PopupProps {
   title: string
   description: string
   icon: React.ReactNode
-  submitHandler?: () => void
+  submitHandler?: (amount: number) => void
 }
 
 const Popup = ({ title, description, icon, submitHandler }: PopupProps) => {
+  const [amount, setAmount] = useState<number>(0)
+
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(Number(event.target.value))
+  }
+
+  const handleSubmission = () => {
+    if (submitHandler) {
+      submitHandler(amount)
+    }
+  }
+
   return (
     <Dialog.Root>
       <Dialog.Trigger className="cursor-pointer mr-5" asChild>
@@ -22,7 +35,12 @@ const Popup = ({ title, description, icon, submitHandler }: PopupProps) => {
             {description}
           </Dialog.Description>
           <fieldset className="Fieldset">
-            <input className="Input text-4xl" id="username" defaultValue="0" />
+            <input
+              className="Input text-4xl"
+              id="username"
+              value={amount}
+              onChange={handleAmountChange}
+            />
           </fieldset>
           <div
             style={{
@@ -32,7 +50,7 @@ const Popup = ({ title, description, icon, submitHandler }: PopupProps) => {
             }}
           >
             <Dialog.Close asChild>
-              <button className="Button green" onClick={submitHandler}>
+              <button className="Button green" onClick={handleSubmission}>
                 Submit
               </button>
             </Dialog.Close>

@@ -1,23 +1,39 @@
 'use client'
+
 import Image from 'next/image'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { LogOut } from 'lucide-react'
 import { signOut } from 'next-auth/react'
-import { buttonVariants } from '@/components/ui/button'
 import { DownloadCloud, UploadCloud } from 'lucide-react'
-import * as Dialog from '@radix-ui/react-dialog'
 import Popup from '@/components/ui/popup'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const NavBar = () => {
   const router = useRouter()
 
-  const handleDebit = () => {
-    console.log('handleDebit')
+  const handleDebit = (amount: number) => {
+    const data = {
+      accountId: '65b55bf35a607c340152e360',
+      amount: amount,
+      type: 'debit',
+    }
+    axios
+      .post('/api/balance', data)
+      .catch(() => toast.error('Something went wrong!'))
+      .finally(() => toast.success('Debit Successful!'))
   }
 
-  const handleWithdrawal = () => {
-    console.log('handleWithdrawal')
+  const handleWithdrawal = (amount: number) => {
+    const data = {
+      accountId: '65b55bf35a607c340152e360',
+      amount: amount,
+      type: 'withdrawal',
+    }
+    axios
+      .post('/api/balance', data)
+      .catch(() => toast.error('Something went wrong!'))
+      .finally(() => toast.success('Withdrawal Successful!'))
   }
 
   return (
