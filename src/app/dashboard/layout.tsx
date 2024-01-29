@@ -23,7 +23,7 @@ export default function DashboardLayout({
   return (
     session?.status === 'authenticated' && (
       <MaxWidthWrapper className="flex flex-col items-center justify-center text-center">
-        <NavBar /> layout
+        <NavBar />
         {children}
       </MaxWidthWrapper>
     )
