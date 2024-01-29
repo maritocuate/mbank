@@ -1,4 +1,4 @@
-# MBank API
+# MBank App
 
 Simple NextJS app to review balance and generate transactions. Uses Prisma to connect to MongoDB.
 
