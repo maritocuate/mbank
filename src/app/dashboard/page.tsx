@@ -1,5 +1,3 @@
-const Dashboard = () => {
-  return <div className="hidden lg:block lg:pl-80 h-full">Empty</div>
+export default function Page() {
+  return <div>EMPTTTTTTTT</div>
 }
-
-export default Dashboard
