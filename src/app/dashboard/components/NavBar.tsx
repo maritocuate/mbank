@@ -40,7 +40,7 @@ const NavBar = () => {
 
   return (
     <nav className="bg-gray-800 text-white w-full p-3 flex justify-between items-center rounded-b-md">
-      <Image src="images/logo.svg" alt="Logo" width={40} height={40} />
+      <Image src="images/logo.svg" alt="Logo" width={40} height={40} priority />
       <div className="flex justify-center items-center">
         <Popup
           title="Debit"
