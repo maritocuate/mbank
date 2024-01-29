@@ -7,6 +7,7 @@ import { signIn, useSession } from 'next-auth/react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
+import useUserStore from '@/store/userStore'
 
 type Variant = 'LOGIN' | 'REGISTER'
 
@@ -14,6 +15,7 @@ const AuthForm = () => {
   const session = useSession()
   const router = useRouter()
   const [variant, setVariant] = useState<Variant>('LOGIN')
+  const { setUser } = useUserStore()
 
   useEffect(() => {
     if (session?.status === 'authenticated') {
@@ -50,6 +52,12 @@ const AuthForm = () => {
         }
         if (callback?.ok && !callback?.error) {
           toast.success('Logged in!')
+          axios
+            .post('/api/accountByEmail', { email: data.email })
+            .then(({ data }) => {
+              const { name, email, balance, id } = data
+              setUser({ name, email, balance, id })
+            })
         }
       })
     }

@@ -8,13 +8,15 @@ import { DownloadCloud, UploadCloud } from 'lucide-react'
 import Popup from '@/components/ui/popup'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import useUserStore from '@/store/userStore'
 
 const NavBar = () => {
   const router = useRouter()
+  const { user } = useUserStore()
 
   const handleDebit = (amount: number) => {
     const data = {
-      accountId: '65b55bf35a607c340152e360',
+      accountId: user?.id,
       amount: amount,
       type: 'debit',
     }
@@ -26,7 +28,7 @@ const NavBar = () => {
 
   const handleWithdrawal = (amount: number) => {
     const data = {
-      accountId: '65b55bf35a607c340152e360',
+      accountId: String(user?.id),
       amount: amount,
       type: 'withdrawal',
     }
