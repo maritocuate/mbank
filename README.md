@@ -1,6 +1,7 @@
 # MBank App
 
-Simple NextJS app to review balance and generate transactions. Uses Prisma to connect to MongoDB.
+Simple NextJS app to review balance and generate transactions. Uses Prisma to access to MongoDB.
+Zustand to manage the store, NextAuth for the login system and Tailwindcss for the styles.
 
 ![screenshot](https://github.com/maritocuate/mbank/blob/main/public/images/screenshot1.png)
 
