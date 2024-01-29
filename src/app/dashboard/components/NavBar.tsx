@@ -21,7 +21,7 @@ const NavBar = () => {
       type: 'debit',
     }
     axios
-      .post('/api/balance', data)
+      .post('/api/transactions', data)
       .catch(() => toast.error('Something went wrong!'))
       .finally(() => toast.success('Debit Successful!'))
   }
@@ -33,7 +33,7 @@ const NavBar = () => {
       type: 'withdrawal',
     }
     axios
-      .post('/api/balance', data)
+      .post('/api/transactions', data)
       .catch(() => toast.error('Something went wrong!'))
       .finally(() => toast.success('Withdrawal Successful!'))
   }
