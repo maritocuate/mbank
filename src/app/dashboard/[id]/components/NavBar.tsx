@@ -1,14 +1,12 @@
 'use client'
 
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import useUserStore from '@/store/userStore'
 import { UserNav } from './UserNav'
 
 const NavBar = () => {
-  const router = useRouter()
   const { user, updateBalance } = useUserStore()
 
   const handleDebit = (amount: number) => {
@@ -55,7 +53,7 @@ const NavBar = () => {
       </div>
       <div className="ml-auto flex items-center space-x-4">
         <div className="capitalize text-sm">Welcome {'username'}</div>
-        <UserNav userid={'id'} username={'username'} email={'email'} />
+        <UserNav />
       </div>
     </nav>
   )

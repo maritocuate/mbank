@@ -13,18 +13,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Moon, Sun, ComputerIcon } from 'lucide-react'
 import { signOut } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-/* import { useTheme } from 'next-themes' */
+import { useTheme } from 'next-themes'
+import useUserStore from '@/store/userStore'
 
-interface UserNavProps {
-  userid: string
-  username: string
-  email: string
-}
-
-export function UserNav({ userid, username, email }: UserNavProps) {
-  const route = useRouter()
-  //const { setTheme } = useTheme()
+export function UserNav() {
+  const { user } = useUserStore()
+  const { setTheme } = useTheme()
 
   return (
     <DropdownMenu>
@@ -39,9 +33,9 @@ export function UserNav({ userid, username, email }: UserNavProps) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{username}</p>
+            <p className="text-sm font-medium leading-none">{user?.name}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {email}
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -49,7 +43,7 @@ export function UserNav({ userid, username, email }: UserNavProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem
             onClick={() => {
-              /* setTheme('light') */
+              setTheme('light')
             }}
           >
             Light
@@ -57,7 +51,7 @@ export function UserNav({ userid, username, email }: UserNavProps) {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              /* setTheme('dark') */
+              setTheme('dark')
             }}
           >
             Dark
@@ -65,7 +59,7 @@ export function UserNav({ userid, username, email }: UserNavProps) {
           </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => {
-              /* setTheme('system') */
+              setTheme('system')
             }}
           >
             System
