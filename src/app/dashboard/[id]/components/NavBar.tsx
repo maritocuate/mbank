@@ -1,33 +1,10 @@
 'use client'
 
 import Image from 'next/image'
-import axios from 'axios'
-import toast from 'react-hot-toast'
 import useUserStore from '@/store/userStore'
 import { UserNav } from './UserNav'
 
 const NavBar = () => {
-  const { user, updateBalance } = useUserStore()
-
-  const handleDebit = (amount: number) => {
-    const data = {
-      accountId: user?.id,
-      amount: amount,
-      type: 'debit',
-    }
-    axios
-      .post('/api/transactions', data)
-      .catch(() => toast.error('Something went wrong!'))
-      .then(() => fetchBalance())
-      .finally(() => toast.success('Debit Successful!'))
-  }
-
-  const fetchBalance = () => {
-    axios
-      .get(`/api/accounts/${user?.id}/balance`)
-      .then(res => updateBalance(res.data.balance))
-  }
-
   return (
     <nav className="flex justify-between h-16 items-center px-6 border-b">
       <div className="flex gap-2">
