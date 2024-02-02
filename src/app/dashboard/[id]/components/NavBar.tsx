@@ -1,7 +1,6 @@
 'use client'
 
 import Image from 'next/image'
-import useUserStore from '@/store/userStore'
 import { UserNav } from './UserNav'
 
 const NavBar = () => {
