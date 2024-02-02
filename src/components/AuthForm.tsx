@@ -70,9 +70,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
         getCurrentSession()
       }
     }
-  }
 
-  /*if (mode === 'register') {
+    if (mode === 'register') {
       await fetch('/api/accounts', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -84,7 +83,8 @@ export default function AuthForm({ mode }: AuthFormProps) {
         .catch(res => toast({ title: 'Error', description: res.response.data }))
         .then(() => toast({ description: 'Account created' }))
         .finally(() => getCurrentSession())
-    } */
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
