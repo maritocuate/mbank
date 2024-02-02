@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import BalanceCard from './components/BalanceCard'
 import { MinusCircle, PlusCircle } from 'lucide-react'
 import useUserStore from '@/store/userStore'
+import Link from 'next/link'
 
 interface DashboardPageProps {
   params: {
@@ -41,12 +42,16 @@ export default function Page({ params }: DashboardPageProps) {
         <div className="flex flex-col items-center justify-between space-y-2 md:flex-row">
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <div className="flex space-x-2">
-            <Button>
-              Deposit <PlusCircle className="ml-2" size={15} />
-            </Button>
-            <Button>
-              Withdrawal <MinusCircle className="ml-2" size={15} />
-            </Button>
+            <Link href={`/dashboard/${id}/transaction?type=deposit`}>
+              <Button>
+                Deposit <PlusCircle className="ml-2" size={15} />
+              </Button>
+            </Link>
+            <Link href={`/dashboard/${id}/transaction?type=withdrawal`}>
+              <Button>
+                Withdrawal <MinusCircle className="ml-2" size={15} />
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="grid gap-4 md:grid-cols-3">

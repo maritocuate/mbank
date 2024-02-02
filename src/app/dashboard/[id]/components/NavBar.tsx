@@ -22,19 +22,6 @@ const NavBar = () => {
       .finally(() => toast.success('Debit Successful!'))
   }
 
-  const handleWithdrawal = (amount: number) => {
-    const data = {
-      accountId: String(user?.id),
-      amount: amount,
-      type: 'withdrawal',
-    }
-    axios
-      .post('/api/transactions', data)
-      .catch(() => toast.error('Something went wrong!'))
-      .then(() => fetchBalance())
-      .finally(() => toast.success('Withdrawal Successful!'))
-  }
-
   const fetchBalance = () => {
     axios
       .get(`/api/accounts/${user?.id}/balance`)
@@ -52,7 +39,7 @@ const NavBar = () => {
         </span>
       </div>
       <div className="ml-auto flex items-center space-x-4">
-        <div className="capitalize text-sm">Welcome {'username'}</div>
+        <div className="capitalize text-sm">Welcome</div>
         <UserNav />
       </div>
     </nav>
