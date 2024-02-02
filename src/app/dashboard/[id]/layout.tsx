@@ -1,6 +1,3 @@
-'use client'
-
-import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import NavBar from './components/NavBar'
 
 export default function DashboardLayout({
@@ -9,9 +6,9 @@ export default function DashboardLayout({
   children: React.ReactNode
 }>) {
   return (
-    <MaxWidthWrapper className="flex flex-col items-center justify-center text-center">
+    <div className="flex flex-col justify-center">
       <NavBar />
       {children}
-    </MaxWidthWrapper>
+    </div>
   )
 }

@@ -1,32 +1,45 @@
 'use client'
-import { useCallback, useEffect, useState } from 'react'
-import axios from 'axios'
+
 import { Input } from './ui/input'
 import { Button } from './ui/button'
-import { signIn, useSession } from 'next-auth/react'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card'
+import { getSession, signIn, useSession } from 'next-auth/react'
+import Image from 'next/image'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form'
 import { useRouter } from 'next/navigation'
-import { toast } from 'react-hot-toast'
 import useUserStore from '@/store/userStore'
+import { toast } from './ui/use-toast'
 
-type Variant = 'LOGIN' | 'REGISTER'
+interface AuthFormProps {
+  mode: 'login' | 'register'
+}
 
-const AuthForm = () => {
+export default function AuthForm({ mode }: AuthFormProps) {
   const session = useSession()
   const router = useRouter()
-  const [variant, setVariant] = useState<Variant>('LOGIN')
   const { setUser } = useUserStore()
 
-  useEffect(() => {
-    if (session?.status === 'authenticated') {
-      router.push('/dashboard')
-    }
-  }, [session?.status, router])
+  const getCurrentSession = async () => {
+    const session = await getSession()
+    const userId = session?.user.id
 
-  const toggleVariant = useCallback(() => {
-    if (variant === 'LOGIN') setVariant('REGISTER')
-    if (variant === 'REGISTER') setVariant('LOGIN')
-  }, [variant])
+    if (session?.user) {
+      await fetch('/api/accountByEmail', {
+        method: 'POST',
+        body: JSON.stringify({ email: session?.user.email }),
+      })
+        .then(res => res.json())
+        .then(data =>
+          setUser({
+            id: data.id,
+            name: data.name,
+            email: data.email,
+            balance: data.balance,
+          })
+        )
+    }
+    router.push(`/dashboard/${userId}`)
+  }
 
   const {
     register,
@@ -35,83 +48,83 @@ const AuthForm = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       name: '',
-      balance: '',
       email: '',
       password: '',
     },
   })
 
-  const onSubmit: SubmitHandler<FieldValues> = data => {
-    if (variant === 'LOGIN') {
-      signIn('credentials', {
+  const onSubmit: SubmitHandler<FieldValues> = async data => {
+    if (mode === 'login') {
+      const res = await signIn('credentials', {
         ...data,
         redirect: false,
-      }).then(callback => {
-        if (callback?.error) {
-          toast.error('Invalid credentials')
-        }
-        if (callback?.ok && !callback?.error) {
-          toast.success('Logged in!')
-          axios
-            .post('/api/accountByEmail', { email: data.email })
-            .then(({ data }) => {
-              const { name, email, balance, id } = data
-              setUser({ name, email, balance, id })
-            })
-        }
       })
-    }
 
-    if (variant === 'REGISTER') {
-      axios
-        .post('/api/accounts', data)
-        .then(() => signIn('credentials', data))
-        .catch(() => toast.error('Something went wrong!'))
+      if (res?.error) {
+        toast({
+          title: 'Error',
+          description: res.error,
+          variant: 'destructive',
+        })
+      } else {
+        getCurrentSession()
+      }
     }
   }
 
+  /*if (mode === 'register') {
+      await fetch('/api/accounts', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(() => signIn('credentials', data))
+        .catch(res => toast({ title: 'Error', description: res.response.data }))
+        .then(() => toast({ description: 'Account created' }))
+        .finally(() => getCurrentSession())
+    } */
+
   return (
-    <div className="m-5 text-sm rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col space-y-4 rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
-      >
-        {variant === 'REGISTER' && (
-          <>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Card className="w-full">
+        <CardHeader className="flex">
+          <div className="mx-auto">
+            <Image
+              alt="Logo"
+              height="30"
+              width="30"
+              src="/images/logo.svg"
+              priority
+            />
+          </div>
+          <CardTitle className="capitalize">{mode}</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-2">
+          {mode === 'register' && (
             <Input
               {...register('name', { required: true })}
-              type="text"
               placeholder="Name"
-              name="name"
             />
-          </>
-        )}
-        <Input
-          {...register('email', { required: true })}
-          type="text"
-          placeholder="Email"
-          name="email"
-        />
-        <Input
-          {...register('password', { required: true })}
-          type="password"
-          placeholder="Password"
-          name="password"
-        />
-        <Button type="submit" size="default">
-          {variant === 'LOGIN' ? 'Sign in' : 'Register'}
-        </Button>
-        <div className="flex justify-between">
-          <div>
-            {variant === 'LOGIN' ? 'New here?' : 'Already have an account?'}
-          </div>
-          <div onClick={toggleVariant} className="underline cursor-pointer">
-            {variant === 'LOGIN' ? 'Create an account' : 'Login'}
-          </div>
-        </div>
-      </form>
-    </div>
+          )}
+          <Input
+            {...register('email', { required: true })}
+            placeholder="Email"
+            type="text"
+          />
+          <Input
+            {...register('password', { required: true })}
+            type="password"
+            placeholder="Password"
+          />
+        </CardContent>
+        <CardFooter className="flex flex-col">
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
+        </CardFooter>
+      </Card>
+    </form>
   )
 }
-
-export default AuthForm

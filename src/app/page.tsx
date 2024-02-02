@@ -1,22 +1,21 @@
-import Image from 'next/image'
-import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import AuthForm from '@/components/AuthForm'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function Home() {
   return (
-    <MaxWidthWrapper className="flex flex-col items-center justify-center text-center">
-      <div className="index-container--logo flex flex-col justify-center sm:mx-auto sm:w-full sm:max-w-md">
-        <span className="mx-auto m-5">
-          <Image
-            alt="Logo"
-            height="48"
-            width="48"
-            src="/images/logo.svg"
-            priority
-          />
-        </span>
-        <AuthForm />
-      </div>
-    </MaxWidthWrapper>
+    <div className="flex flex-col justify-center items-center mt-3 sm:mx-auto sm:w-full sm:max-w-md">
+      <Tabs defaultValue="login" className="w-full justify-center">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="login">Login</TabsTrigger>
+          <TabsTrigger value="register">Register</TabsTrigger>
+        </TabsList>
+        <TabsContent value="login">
+          <AuthForm mode="login" />
+        </TabsContent>
+        <TabsContent value="register">
+          <AuthForm mode="register" />
+        </TabsContent>
+      </Tabs>
+    </div>
   )
 }

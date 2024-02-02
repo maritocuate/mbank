@@ -3,12 +3,12 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   const body = await request.json()
-  const { email } = body
+  const { id } = body
 
-  if (!email) return new NextResponse('Missing email', { status: 400 })
+  if (!id) return new NextResponse('Missing id', { status: 400 })
 
   const updatedAccount = await prisma.account.findUnique({
-    where: { email: email },
+    where: { id },
     select: {
       id: true,
       name: true,
