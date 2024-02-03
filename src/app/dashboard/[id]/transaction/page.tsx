@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from '@/components/ui/use-toast'
+import useUserStore from '@/store/userStore'
 
 type TransactionPageProps = {
   params: {
@@ -24,6 +25,7 @@ export default function TransactionPage({ params }: TransactionPageProps) {
   const searchParams = useSearchParams()
   const type = searchParams.get('type')
   const router = useRouter()
+  const { updateBalance } = useUserStore()
   const [amount, setAmount] = useState<number>(0)
 
   if (type !== 'deposit' && type !== 'withdrawal') {
@@ -49,7 +51,14 @@ export default function TransactionPage({ params }: TransactionPageProps) {
         toast({ title: 'Something went wrong!', variant: 'destructive' })
       )
       .then(() => router.push(`/dashboard/${id}`))
+      .then(() => fetchBalance(id))
       .finally(() => toast({ title: 'Transaction Successful!' }))
+  }
+
+  const fetchBalance = async (userId: string) => {
+    await fetch(`/api/accounts/${userId}/balance`)
+      .then(res => res.json())
+      .then(res => updateBalance(res.balance))
   }
 
   return (
