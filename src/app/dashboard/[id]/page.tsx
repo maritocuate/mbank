@@ -7,6 +7,7 @@ import useUserStore from '@/store/userStore'
 import useTransactionStore from '@/store/transactionStore'
 import MovementsCard from '@/components/dashboard/MovementsCard'
 import { useRouter } from 'next/navigation'
+import DollarCard from '@/components/dashboard/DollarCard'
 
 interface DashboardPageProps {
   params: {
@@ -74,7 +75,10 @@ export default function Page({ params }: DashboardPageProps) {
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           <BalanceCard />
+
           <MovementsCard />
+
+          <DollarCard />
         </div>
       </div>
     </>
