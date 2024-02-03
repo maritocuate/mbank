@@ -79,7 +79,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           'Content-Type': 'application/json',
         },
       })
-        .then(() => signIn('credentials', data))
+        .then(() => signIn('credentials', { ...data, redirect: false }))
         .catch(res => toast({ title: 'Error', description: res.response.data }))
         .then(() => toast({ description: 'Account created' }))
         .finally(() => getCurrentSession())
