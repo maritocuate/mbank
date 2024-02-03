@@ -33,8 +33,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster />
           <AuthContext>{children}</AuthContext>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

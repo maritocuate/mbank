@@ -22,6 +22,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const getCurrentSession = async () => {
     const session = await getSession()
     const userId = session?.user.id
+    router.push(`/dashboard/${userId}`)
 
     if (session?.user) {
       await fetch('/api/accountByEmail', {
@@ -38,7 +39,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
           })
         )
     }
-    router.push(`/dashboard/${userId}`)
   }
 
   const {
