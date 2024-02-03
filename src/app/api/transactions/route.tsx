@@ -17,5 +17,13 @@ export async function POST(request: Request) {
     },
   })
 
-  return NextResponse.json(updatedAccount)
+  const newTransaction = await prisma.transaction.create({
+    data: {
+      accountId,
+      amount,
+      type,
+    },
+  })
+
+  return NextResponse.json(updatedAccount && newTransaction)
 }

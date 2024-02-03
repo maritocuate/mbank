@@ -4,7 +4,9 @@ import { Button } from '@/components/ui/button'
 import BalanceCard from './components/BalanceCard'
 import { MinusCircle, PlusCircle } from 'lucide-react'
 import useUserStore from '@/store/userStore'
+import useTransactionStore from '@/store/transactionStore'
 import Link from 'next/link'
+import MovementsCard from '@/components/dashboard/MovementsCard'
 
 interface DashboardPageProps {
   params: {
@@ -15,6 +17,7 @@ interface DashboardPageProps {
 export default function Page({ params }: DashboardPageProps) {
   const { id } = params
   const { user, setUser } = useUserStore()
+  const { setTransactions } = useTransactionStore()
 
   const fetchAccount = async () => {
     await fetch('/api/accountById', {
@@ -32,8 +35,18 @@ export default function Page({ params }: DashboardPageProps) {
       )
   }
 
-  if (!user) {
+  const fetchTransactions = async () => {
+    await fetch('/api/transactionsById', {
+      method: 'POST',
+      body: JSON.stringify({ id }),
+    })
+      .then(res => res.json())
+      .then(data => setTransactions(data))
+  }
+
+  if (!user && id) {
     fetchAccount()
+    fetchTransactions()
   }
 
   return (
@@ -56,6 +69,7 @@ export default function Page({ params }: DashboardPageProps) {
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           <BalanceCard />
+          <MovementsCard />
         </div>
       </div>
     </>
