@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { DollarSign } from 'lucide-react'
+import { getDollar } from '../services'
+
+async function fetchDollar() {
+  return await getDollar()
+}
 
 export default function DollarCard() {
-  const [dollarValue, setDollarValue] = useState(null)
+  const [dollarValue, setDollarValue] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const response = await fetch('https://api.bluelytics.com.ar/v2/latest')
-        const data = await response.json()
-        setDollarValue(data.blue.value_avg)
-      } catch (e) {}
+      const data = await fetchDollar()
+      setDollarValue(data.blue.value_avg)
     }
 
     fetchData()

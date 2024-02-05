@@ -1,10 +1,10 @@
-enum TransactionType {
+export enum TransactionType {
   WITHDRAWAL = 'withdrawal',
   DEPOSIT = 'deposit',
 }
 
 export interface Transaction {
-  accounId: string
+  accountId: string
   type: TransactionType
   amount: number
 }

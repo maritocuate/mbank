@@ -7,12 +7,21 @@ import useUserStore from '@/store/userStore'
 import useTransactionStore from '@/store/transactionStore'
 import MovementsCard from '@/components/dashboard/MovementsCard'
 import { useRouter } from 'next/navigation'
-import DollarCard from '@/components/dashboard/DollarCard'
+import DollarCard from './components/DollarCard'
+import { getAccount, getTransactions } from './services'
 
 interface DashboardPageProps {
   params: {
     id: string
   }
+}
+
+async function fetchAccount(id: string) {
+  return await getAccount(id)
+}
+
+async function fetchTransactions(id: string) {
+  return await getTransactions(id)
 }
 
 export default function Page({ params }: DashboardPageProps) {
@@ -21,34 +30,24 @@ export default function Page({ params }: DashboardPageProps) {
   const { setTransactions } = useTransactionStore()
   const router = useRouter()
 
-  const fetchAccount = async () => {
-    await fetch('/api/accountById', {
-      method: 'POST',
-      body: JSON.stringify({ id }),
+  const setAccount = async (id: string) => {
+    const account = await fetchAccount(id)
+    setUser({
+      id: account.id,
+      name: account.name,
+      email: account.email,
+      balance: account.balance,
     })
-      .then(res => res.json())
-      .then(data =>
-        setUser({
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          balance: data.balance,
-        })
-      )
   }
 
-  const fetchTransactions = async () => {
-    await fetch('/api/transactionsById', {
-      method: 'POST',
-      body: JSON.stringify({ id }),
-    })
-      .then(res => res.json())
-      .then(data => setTransactions(data))
+  const setTransactionsById = async (id: string) => {
+    const transactions = await fetchTransactions(id)
+    setTransactions(transactions)
   }
 
   if (!user && id) {
-    fetchAccount()
-    fetchTransactions()
+    setAccount(id)
+    setTransactionsById(id)
   }
 
   return (

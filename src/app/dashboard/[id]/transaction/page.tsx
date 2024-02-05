@@ -13,6 +13,8 @@ import { Input } from '@/components/ui/input'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { toast } from '@/components/ui/use-toast'
 import useUserStore from '@/store/userStore'
+import { saveTransaction, getBalance } from './services'
+import { TransactionType } from '@/interfaces'
 
 type TransactionPageProps = {
   params: {
@@ -38,27 +40,19 @@ export default function TransactionPage({ params }: TransactionPageProps) {
 
   const handleTransaction = async () => {
     const data = {
-      accountId: String(id),
+      accountId: id,
       amount: amount,
-      type: type,
+      type: type as TransactionType,
     }
 
-    await fetch('/api/transactions', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    })
+    await saveTransaction(data)
       .catch(() =>
         toast({ title: 'Something went wrong!', variant: 'destructive' })
       )
       .then(() => router.push(`/dashboard/${id}`))
-      .then(() => fetchBalance(id))
-      .finally(() => toast({ title: 'Transaction Successful!' }))
-  }
-
-  const fetchBalance = async (userId: string) => {
-    await fetch(`/api/accounts/${userId}/balance`)
-      .then(res => res.json())
+      .then(() => getBalance(id))
       .then(res => updateBalance(res.balance))
+      .finally(() => toast({ title: 'Transaction Successful!' }))
   }
 
   return (
