@@ -9,6 +9,7 @@ import MovementsCard from '@/components/dashboard/MovementsCard'
 import { useRouter } from 'next/navigation'
 import DollarCard from './components/DollarCard'
 import { getAccount, getTransactions } from './services'
+import TransactionsCard from './components/TransactionsCard'
 
 interface DashboardPageProps {
   params: {
@@ -27,7 +28,7 @@ async function fetchTransactions(id: string) {
 export default function Page({ params }: DashboardPageProps) {
   const { id } = params
   const { user, setUser } = useUserStore()
-  const { setTransactions } = useTransactionStore()
+  const { setTransactions, transactions } = useTransactionStore()
   const router = useRouter()
 
   const setAccount = async (id: string) => {
@@ -74,10 +75,13 @@ export default function Page({ params }: DashboardPageProps) {
         </div>
         <div className="grid gap-4 md:grid-cols-3">
           <BalanceCard />
-
           <MovementsCard />
-
           <DollarCard />
+        </div>
+
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+          <TransactionsCard type="deposit" data={transactions} />
+          <TransactionsCard type="withdrawal" data={transactions} />
         </div>
       </div>
     </>
