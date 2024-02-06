@@ -21,7 +21,6 @@ export default function TransactionsCard({
   data,
 }: TransactionsCardProps) {
   const filteredData = data.filter(data => data.type === type)
-  console.log(filteredData)
 
   return (
     <Card>
