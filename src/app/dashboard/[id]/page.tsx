@@ -10,19 +10,12 @@ import { useRouter } from 'next/navigation'
 import DollarCard from './components/DollarCard'
 import { getAccount, getTransactions } from './services'
 import TransactionsCard from './components/TransactionsCard'
+import { useCallback, useEffect } from 'react'
 
 interface DashboardPageProps {
   params: {
     id: string
   }
-}
-
-async function fetchAccount(id: string) {
-  return await getAccount(id)
-}
-
-async function fetchTransactions(id: string) {
-  return await getTransactions(id)
 }
 
 export default function Page({ params }: DashboardPageProps) {
@@ -31,25 +24,33 @@ export default function Page({ params }: DashboardPageProps) {
   const { setTransactions, transactions } = useTransactionStore()
   const router = useRouter()
 
-  const setAccount = async (id: string) => {
-    const account = await fetchAccount(id)
-    setUser({
-      id: account.id,
-      name: account.name,
-      email: account.email,
-      balance: account.balance,
-    })
-  }
+  const setAccount = useCallback(
+    async (id: string) => {
+      const account = await getAccount(id)
+      setUser({
+        id: account.id,
+        name: account.name,
+        email: account.email,
+        balance: account.balance,
+      })
+    },
+    [setUser]
+  )
 
-  const setTransactionsById = async (id: string) => {
-    const transactions = await fetchTransactions(id)
-    setTransactions(transactions)
-  }
+  const setTransactionsById = useCallback(
+    async (id: string) => {
+      const transactions = await getTransactions(id)
+      setTransactions(transactions)
+    },
+    [setTransactions]
+  )
 
-  if (!user && id) {
-    setAccount(id)
+  useEffect(() => {
+    if (!user && id) {
+      setAccount(id)
+    }
     setTransactionsById(id)
-  }
+  }, [user, id, setAccount, setTransactionsById])
 
   return (
     <>
